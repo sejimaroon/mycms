@@ -1,0 +1,615 @@
+* {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, Roboto, 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+li,
+ol,
+p,
+a {
+  color: inherit;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+.header {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 80px;
+  z-index: 100;
+}
+
+.hero {
+  padding: 40px;
+  border-radius: 12px;
+  background: #f3f4f6;
+  margin-bottom: 16px;
+}
+
+main {
+  position: relative;
+  margin: 0 auto;
+  padding: 80px 0;
+  width: 100%;
+  max-width: 1080px;
+}
+
+.section {
+  margin-bottom: 16px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.section__title {
+  margin: 40px 0;
+}
+
+
+
+.admin-container {
+  max-width: 1080px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.admin-container h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 24px;
+}
+
+/* === 投稿フォーム === */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #fafafa;
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+input[type="text"],
+textarea {
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border 0.2s;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+input[type="file"] {
+  font-size: 14px;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* === admin投稿一覧 === */
+
+.form__title {
+  margin: 40px 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  background: #fafafa;
+  margin-bottom: 16px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+li img {
+  width: 120px;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+li h3 {
+  margin: 0;
+  color: #222;
+}
+
+li p {
+  color: #555;
+}
+
+li small {
+  color: #999;
+  font-size: 13px;
+}
+
+/* === タブナビゲーション === */
+.tab-navigation {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 0;
+}
+
+.tab-navigation button {
+  background: none;
+  color: #666;
+  border: none;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  border-radius: 8px 8px 0 0;
+}
+
+.tab-navigation button:hover {
+  background: #f0f0f0;
+}
+
+.tab-navigation button.active {
+  color: #007bff;
+  background: #e7f3ff;
+  border-bottom: 2px solid #007bff;
+  margin-bottom: -2px;
+}
+
+/* === フォームグループ === */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group select {
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: white;
+}
+
+/* === セクションフィルター === */
+.section-filter {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.section-filter button {
+  background: #f8f9fa;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.section-filter button:hover {
+  background: #e9ecef;
+}
+
+/* === 投稿リスト === */
+.posts-list {
+  list-style: none;
+}
+
+.post-item {
+  background: #fafafa;
+  margin-bottom: 16px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.post-header h3 {
+  margin: 0;
+  color: #222;
+}
+
+.section-badge {
+  background: #007bff;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* === セクション管理 === */
+.section-form {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.section-form input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.section-form button {
+  background: #28a745;
+  white-space: nowrap;
+}
+
+.section-form button:hover {
+  background: #218838;
+}
+
+.sections-list {
+  list-style: none;
+}
+
+.section-item {
+  background: #fafafa;
+  margin-bottom: 16px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+}
+
+.section-view {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.section-info h3 {
+  margin: 0 0 8px 0;
+  color: #222;
+}
+
+.section-info p {
+  color: #555;
+  margin: 0 0 8px 0;
+}
+
+.section-info small {
+  color: #999;
+  font-size: 13px;
+}
+
+.section-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.section-actions button {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.section-actions button:first-child {
+  background: #ffc107;
+  color: #333;
+}
+
+.section-actions button:first-child:hover {
+  background: #e0a800;
+}
+
+.section-edit {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.section-edit input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.section-edit button {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.section-edit button:first-child {
+  background: #28a745;
+}
+
+.section-edit button:first-child:hover {
+  background: #218838;
+}
+
+.section-edit button:last-child {
+  background: #6c757d;
+}
+
+.section-edit button:last-child:hover {
+  background: #5a6268;
+}
+
+/* === 削除ボタン === */
+.delete-btn {
+  background: #dc3545 !important;
+  color: white !important;
+}
+
+.delete-btn:hover {
+  background: #c82333 !important;
+}
+
+/* === 投稿プレビュー === */
+.post-preview {
+  background: #fafafa;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  margin-bottom: 16px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.post-preview:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.post-preview h3 {
+  margin: 0 0 8px 0;
+}
+
+.post-preview h3 a {
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.post-preview h3 a:hover {
+  opacity: 0.8;
+}
+
+.post-preview .post__excerpt {
+  margin: 12px 0;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.read-more-link {
+  display: inline-block;
+  margin-top: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.read-more-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* === セクションフッター === */
+.section-footer {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+.view-all-btn {
+  padding: 12px 24px;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.view-all-btn:hover {
+  opacity: 0.9;
+}
+
+/* === パンくずナビゲーション === */
+.breadcrumb {
+  margin-bottom: 24px;
+  padding: 12px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.breadcrumb a {
+  color: #007bff;
+  text-decoration: none;
+  margin-right: 8px;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb span {
+  color: #666;
+  margin-left: 8px;
+}
+
+/* === 戻るボタン === */
+.back-button-container {
+  margin-bottom: 24px;
+}
+
+.back-button {
+  padding: 10px 20px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background: #5a6268;
+}
+
+/* === 投稿詳細ページ === */
+.post-detail-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.post-detail {
+  padding: 40px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+}
+
+.post-detail h1 {
+  margin-bottom: 16px;
+  font-size: 32px;
+  line-height: 1.3;
+}
+
+.post-detail .post__date {
+  margin-bottom: 24px;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.post-detail .post__image {
+  margin: 24px 0;
+}
+
+.post-detail .post__image img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.post-detail .post__content {
+  line-height: 1.8;
+  font-size: 16px;
+  white-space: pre-wrap;
+}
+
+/* === セクション一覧ページ === */
+.section-list-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.section-list-container .section {
+  padding: 32px;
+}
+
+.section-list-container .posts-list {
+  margin-top: 24px;
+}
+
+.section-list-container .post-preview {
+  margin-bottom: 20px;
+}
+
+/* === レスポンシブ対応 === */
+@media (max-width: 768px) {
+  .post-detail {
+    padding: 24px;
+  }
+
+  .post-detail h1 {
+    font-size: 24px;
+  }
+
+  .section-list-container .section {
+    padding: 20px;
+  }
+
+  .post-preview {
+    padding: 16px;
+  }
+
+  .view-all-btn {
+    width: 100%;
+  }
+}
+
+/* フロント投稿 */
+
+.post__title {
+  margin-top: 40px;
+}
+
+.post__content {
+  margin-top: 24px;
+  font-size: 18px;
+}
+
+.post__image {
+  margin-top: 32px;
+}
+
+.post__image img {
+  max-height: 240px;
+}
+
+.post__date {
+  margin-top: 8px;
+  font-size: 12px;
+}

@@ -1,0 +1,376 @@
+@use "variables" as v;
+@use "mixin";
+
+.footer {
+  position: relative;
+  margin-top: 120px;
+  background-color: #fff;
+  color: #333;
+  // padding-bottom: 40px;
+
+  &__inner {
+    padding: 16px 40px;
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  &__flex {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+  }
+
+  &__link {
+    display: flex;
+    gap: 16px;
+
+  }
+
+  &__list {
+    padding-right: 16px;
+    border-right: 1px solid #000;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    &--no_ul {
+      &::before {
+        display: none;
+      }
+    }
+
+    li {
+      position: relative;
+      margin-left: 1rem;
+      margin-top: 0.5rem;
+
+      a {
+        color: #036eb8 !important;
+        font-size: 0.75rem;
+        font-weight: bold;
+
+        &:after {
+          position: absolute;
+          content: "";
+          bottom: 0px;
+          left: 0;
+          width: 0%;
+          height: 1px;
+          background-color: #666;
+        }
+
+        &:hover {
+          &:after {
+            width: 100%;
+            transition: all .3s ease-in-out;
+          }
+        }
+      }
+
+      &::before {
+        position: absolute;
+        content: "";
+        top: 50%;
+        left: -10px;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 4px;
+        background-color: #036eb8;
+        border-radius: 50%;
+      }
+
+
+    }
+  }
+
+  &__sublist {
+    margin: 1rem 0 0 -0.4rem;
+
+    li {
+      position: relative;
+      margin-top: 0;
+
+      &::before {
+        position: absolute;
+        content: "→";
+        width: 0;
+        height: 0;
+        top: 4px;
+        left: -1.25rem;
+        color: #666;
+        background-color: transparent;
+        font-size: .75rem;
+      }
+
+      a {
+        position: relative;
+        color: #000 !important;
+        font-weight: 500;
+
+        &:before {
+          position: absolute;
+          content: "";
+          bottom: 0px;
+          left: 0;
+          width: 0%;
+          height: 1px;
+          background-color: #666;
+        }
+
+        &:after {
+          display: none;
+        }
+
+        &:hover {
+          &:before {
+            width: 100%;
+            transition: all .3s ease-in-out;
+          }
+
+          &:after {
+            display: none;
+          }
+        }
+      }
+    }
+
+  }
+
+  &__access {
+    padding-left: 16px;
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    a {
+      text-decoration: underline #666 1px solid;
+    }
+
+  }
+
+  &__logo {
+    img {
+
+      width: 200px;
+    }
+  }
+
+  &__address {
+    margin-top: 1.5rem;
+  }
+
+  &__more {
+    margin-top: 1.5rem;
+  }
+
+  @include mixin.sp {
+    // padding-bottom: 80px;
+
+    &__inner {
+      padding: 16px 24px;
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    &__flex {
+      display: flex;
+      justify-content: space-between;
+      margin: 0 auto;
+    }
+
+    &__link {
+      display: flex;
+      gap: 16px;
+
+    }
+
+    &__list {
+      padding-right: 16px;
+      border-right: 1px solid #000;
+
+      &:last-child {
+        border-right: none;
+      }
+
+      &--no_ul {
+        &::before {
+          display: none;
+        }
+      }
+
+      li {
+        position: relative;
+        margin-left: 1rem;
+        margin-top: 0.5rem;
+
+        a {
+          color: #036eb8 !important;
+          font-size: 0.75rem;
+          font-weight: bold;
+
+          &:after {
+            position: absolute;
+            content: "";
+            bottom: 0px;
+            left: 0;
+            width: 0%;
+            height: 1px;
+            background-color: #666;
+          }
+
+          &:hover {
+            &:after {
+              width: 100%;
+              transition: all .3s ease-in-out;
+            }
+          }
+        }
+
+        &::before {
+          position: absolute;
+          content: "";
+          top: 50%;
+          left: -10px;
+          transform: translateY(-50%);
+          width: 4px;
+          height: 4px;
+          background-color: #036eb8;
+          border-radius: 50%;
+        }
+
+
+      }
+    }
+
+    &__sublist {
+      margin: 1rem 0 0 -0.4rem;
+
+      li {
+        position: relative;
+        margin-top: 0;
+
+        &::before {
+          position: absolute;
+          content: "→";
+          width: 0;
+          height: 0;
+          top: 4px;
+          left: -1.25rem;
+          color: #666;
+          background-color: transparent;
+          font-size: .75rem;
+        }
+
+        a {
+          position: relative;
+          color: #000 !important;
+          font-weight: 500;
+
+          &:before {
+            position: absolute;
+            content: "";
+            bottom: 0px;
+            left: 0;
+            width: 0%;
+            height: 1px;
+            background-color: #666;
+          }
+
+          &:after {
+            display: none;
+          }
+
+          &:hover {
+            &:before {
+              width: 100%;
+              transition: all .3s ease-in-out;
+            }
+
+            &:after {
+              display: none;
+            }
+          }
+        }
+      }
+
+    }
+
+    &__access {
+      padding-left: 0;
+      font-size: 0.875rem;
+      font-weight: 500;
+
+      a {
+        text-decoration: underline #666 1px solid;
+      }
+
+    }
+
+    &__logo {
+      img {
+        max-width: 200px;
+      }
+    }
+
+    &__address {
+      margin-top: 1.5rem;
+    }
+
+    &__more {
+      margin-top: 1.5rem;
+    }
+
+  }
+}
+
+.-no_ul {
+  position: relative;
+  color: #036eb8;
+  font-size: 0.75rem;
+  font-weight: bold;
+
+  &::before {
+    position: absolute;
+    content: "";
+    top: 50%;
+    left: -10px;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    background-color: #036eb8;
+    border-radius: 50%;
+  }
+
+  &:after {
+    display: none;
+  }
+}
+
+
+
+.footer__note {
+  margin-top: 40px;
+  text-align: center;
+  font-size: .75rem;
+
+  @include mixin.sp {
+    margin-top: 24px;
+    padding-left: 20px;
+    text-align: left;
+    font-size: .625rem;
+  }
+}
+
+.copyright {
+  margin-top: 16px;
+  text-align: center;
+  font-size: .625rem;
+}
+
+@media(max-width: 1023px) {
+  .footer__link {
+    display: none;
+  }
+}

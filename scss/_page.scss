@@ -1,0 +1,119 @@
+@use "variables" as v;
+@use "mixin";
+
+
+.main {
+  position: relative;
+  // margin-top: 120px;
+  padding-bottom: 80px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 40px;
+
+  @include mixin.sp {
+    padding: 0 24px;
+  }
+}
+
+// .inner {
+//   max-width: 1080px;
+//     margin: 0 auto;
+//     padding: 0 5%;
+// }
+
+.section {
+  position: relative;
+  // margin-top: 40px;
+  padding-top: 80px;
+
+  &__inner {
+    margin: 0 auto;
+    max-width: 1280px;
+    padding: 0 40px;
+  }
+
+  &__title {
+    @include mixin.section__title;
+    // font-family: メイリオ,
+    //   Meiryo,
+    //   "ヒラギノ角ゴProN W3",
+    //   "Hiragino Kaku Gothic ProN",
+    //   sans-serif;
+  }
+
+  &__lead {
+
+    line-height: calc(32 / 14);
+    font-size: 1.25rem;
+
+    &--text {
+      font-size: 0.75rem;
+      padding: 4px 16px;
+      color: v.$white-color;
+      background-color: #000;
+      font-weight: bold;
+      margin-right: 24px;
+    }
+
+    img {
+      width: 64px;
+    }
+  }
+
+  &__img {
+    margin: 40px auto 0;
+    max-width: 640px;
+
+    img {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
+  &__theme {
+    writing-mode: vertical-rl;
+
+    &--title {
+      margin-left: 24px;
+      font-size: 2rem;
+      height: fit-content;
+      padding: 16px 8px;
+      font-weight: bold;
+      background-color: #fff;
+    }
+
+    &--lead {
+      margin-top: 16px;
+      font-size: 1.75rem;
+      font-weight: bold;
+      line-height: 2.25;
+    }
+  }
+
+  &__text {
+    @include mixin.palt;
+    margin-top: 24px;
+    text-align: center;
+  }
+
+  @include mixin.sp {
+    padding-top: 40px;
+    // margin-top: 20px;
+  }
+}
+
+.blank {
+  margin: -4px 0 0 8px;
+  width: 15px;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(50px);
+  /* 50px下から登場 */
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in.active {
+  opacity: 1;
+  transform: translateY(0);
+}

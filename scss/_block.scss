@@ -1,0 +1,16 @@
+@use "variables" as v;
+@use "mixin";
+
+.block {
+  position: relative;
+  margin-bottom: 16px;
+
+  &--heading {
+    @include mixin.heading;
+    font-family: serif, sans-serif;
+  }
+
+  &--columns {
+    margin-top: 40px;
+  }
+}

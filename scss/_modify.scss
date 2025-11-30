@@ -1,0 +1,35 @@
+@use "mixin";
+
+.-flex {
+  display: flex;
+
+  &-j-center {
+    display: flex;
+    justify-content: center;
+  }
+
+  &-a-center {
+    display: flex;
+    align-items: center;
+  }
+
+  &-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.-center {
+  text-align: center;
+}
+
+.-mtb-1rem {
+  margin: 1rem 0;
+}
+
+@include mixin.sp {
+  .-sp-column {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,47 @@
+.star {
+
+  &.active {
+    &:before {
+
+      animation: star 2s 0.5s ease-in;
+    }
+  }
+}
+
+@keyframes star {
+  0% {
+    opacity: .25;
+  }
+
+  25% {
+    opacity: .5;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  75% {
+    opacity: .7;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.mv-glass .active {
+  &::after {
+    position: absolute;
+    content: "";
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    max-width: 480px;
+    aspect-ratio: 4 / 3;
+    background: url(../img/glass_02.svg) no-repeat;
+    background-position: center top;
+    z-index: 3;
+  }
+}

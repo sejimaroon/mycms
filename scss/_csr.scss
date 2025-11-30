@@ -1,0 +1,164 @@
+@use 'variables' as v;
+@use 'mixin';
+
+.csr {
+  position: relative;
+  overflow-x: hidden;
+
+  &::before {
+    position: absolute;
+    content: "";
+    width: 50%;
+    max-width: 640px;
+    aspect-ratio: 4 / 3;
+    top: 80px;
+    right: 40px;
+    border-radius: 16px 0 0 16px;
+    background: url(../img/about-loop_03.jpg) no-repeat;
+    background-size: cover;
+
+  }
+
+  >.inner {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #fff;
+    padding-bottom: 64px;
+    border-radius: 16px;
+  }
+
+  &__title {
+    position: absolute;
+    left: 13rem;
+  }
+
+  &__container {
+    display: flex;
+    position: relative;
+    padding: 64px 0;
+    margin-top: 8.5rem;
+  }
+
+  &__image {
+    width: 100%;
+    width: 50vw;
+    max-width: 640px;
+    transform: translate(-13.5vw, -160px);
+
+    img {
+      border-radius: 16px 0 0 16px;
+    }
+  }
+
+  &__theme {
+    margin-left: 12vw;
+
+
+    &--title {
+      background-color: transparent;
+      margin-top: -180px;
+    }
+
+    &--lead {
+      display: flex;
+      font-size: 15px;
+      line-height: 2.5;
+      font-weight: bold;
+      letter-spacing: 0.06em;
+      flex-direction: row;
+
+      >.more__btn {
+        writing-mode: horizontal-tb !important;
+      }
+    }
+  }
+
+  &__card {
+    display: flex;
+    column-gap: 16px;
+    width: 100%;
+    max-width: 1040px;
+
+    &--item {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 16px;
+      /* liに適用して、imgがズームしても適用されるように */
+
+      a {
+        display: block;
+        text-decoration: none;
+
+        &:hover {
+          opacity: 1 !important;
+          overflow: hidden;
+        }
+      }
+
+      &--image {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        height: 100%;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: transform 0.3s;
+
+        img {
+          width: 100%;
+          aspect-ratio: 4 / 3;
+          height: 100%;
+          border-radius: 16px;
+          transition: transform 0.3s;
+        }
+      }
+
+
+      &:hover {
+        img {
+          transform: scale(1.1);
+        }
+      }
+
+      &--title {
+        position: relative;
+        margin-top: 16px;
+        font-weight: bold;
+        padding-bottom: 8px;
+
+        &:before {
+          position: absolute;
+          content: "";
+          top: 4px;
+          left: 4em;
+          width: 16px;
+          height: 16px;
+          background-color: v.$yellow;
+          border-radius: 50%;
+          transition: transform 0.3s;
+        }
+
+        &::after {
+          position: absolute;
+          content: "";
+          top: 9px;
+          left: calc(4em + 5px);
+          width: 6px;
+          height: 6px;
+          background-color: #fff;
+          border-radius: 50%;
+        }
+      }
+
+      &:hover &--title:before {
+        transform: scale(0.75);
+      }
+
+      &--sub {
+        color: #999;
+        font-size: 12px;
+        font-weight: bold;
+      }
+    }
+  }
+}

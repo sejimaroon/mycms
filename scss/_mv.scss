@@ -1,0 +1,103 @@
+@use 'variables' as v;
+@use 'mixin';
+
+.mv {
+  inline-size: 100%;
+  block-size: 100svh;
+  /* または 100vh */
+  background-image: url('../images/lovering.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+//   &__video {
+//     width: 100%;
+//     height: 100%;
+//     object-fit: cover;
+//   }
+
+//   &__lead {
+//     position: absolute;
+//     bottom: 80px;
+//     left: 48px;
+//     font-family: メイリオ,
+//       Meiryo,
+//       "ヒラギノ角ゴProN W3",
+//       "Hiragino Kaku Gothic ProN",
+//       sans-serif;
+//   }
+
+//   &__catch {
+//     @include mixin.heading;
+//     font-size: 3.5rem;
+//     line-height: 1.15;
+//     letter-spacing: 0.1em;
+//   }
+
+//   &__text {
+//     font-weight: bold;
+//     font-size: 1.25rem;
+//     letter-spacing: 0.3em;
+//   }
+
+//   &__scroll {
+//     position: absolute;
+//     right: 48px;
+//     bottom: 40px;
+//     writing-mode: vertical-rl;
+//     font-weight: bold;
+//     mix-blend-mode: difference;
+
+//     /* 線のアニメーション部分 */
+//     &::before {
+//       animation: scroll 2s infinite;
+//       background-color: rgba($color: #fff, $alpha: 0.7);
+//       bottom: -80px;
+//       content: "";
+//       height: 64px;
+//       left: 0;
+//       margin: auto;
+//       position: absolute;
+//       right: 0;
+//       width: 1px;
+//       z-index: 2;
+//     }
+
+//     /* 線の背景色 */
+//     &::after {
+//       background-color: transparent;
+//       bottom: -80px;
+//       content: "";
+//       height: 64px;
+//       left: 0;
+//       margin: auto;
+//       position: absolute;
+//       right: 0;
+//       width: 1px;
+//     }
+//   }
+// }
+
+// /* 線のアニメーション */
+// @keyframes scroll {
+//   0% {
+//     transform: scale(1, 0);
+//     transform-origin: 0 0;
+//   }
+
+//   50% {
+//     transform: scale(1, 1);
+//     transform-origin: 0 0;
+//   }
+
+//   51% {
+//     transform: scale(1, 1);
+//     transform-origin: 0 100%;
+//   }
+
+//   100% {
+//     transform: scale(1, 0);
+//     transform-origin: 0 100%;
+//   }
+// }

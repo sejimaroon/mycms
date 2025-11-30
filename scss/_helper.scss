@@ -1,0 +1,15 @@
+._disp-pc {
+  display: block !important;
+
+  @media (max-width: 767.9px) {
+    display: none !important;
+  }
+}
+
+._disp-sp {
+  display: none !important;
+
+  @media (max-width: 767.9px) {
+    display: block !important;
+  }
+}

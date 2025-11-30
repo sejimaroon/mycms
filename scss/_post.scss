@@ -1,0 +1,69 @@
+@use "variables" as v;
+@use "mixin";
+
+.post {
+  position: relative;
+
+  &__container {
+    margin-top: 40px;
+  }
+
+  &__title {
+    font-family: serif, sans-serif;
+    font-weight: bold;
+  }
+
+  &__date {
+    margin: 8px 0;
+  }
+
+  &__detail {
+    padding: 40px 0;
+    background-color: #fff;
+
+    &-title {
+      margin-bottom: 16px;
+    }
+  }
+
+  &__image {
+    margin: 24px 0;
+  }
+
+  &__preview {
+    margin-top: 24px;
+  }
+
+  &__excerpt {
+    margin-top: 16px;
+  }
+
+  &__back--button {
+    margin-top: 40px;
+  }
+
+}
+
+
+.breadcrumb {
+  margin: 16px 0;
+
+  a {
+    margin: 0 4px;
+  }
+
+  span {
+    margin-left: 4px;
+  }
+}
+
+.block-columns {
+  margin: 16px 0;
+}
+
+.read-more-link {
+  display: block;
+  margin-top: 16px;
+  font-family: serif, sans-serif;
+  font-weight: bold;
+}

@@ -1,0 +1,181 @@
+@use "variables" as v;
+@use "mixin";
+
+.recruit {
+  position: relative;
+
+  >.inner {
+    padding: 0 6.25%;
+    max-width: 960px;
+  }
+
+  &__title {
+    @include mixin.heading;
+    text-align: center;
+    letter-spacing: 0.06em;
+    font-size: 2rem;
+  }
+
+  &__btn {
+    display: flex;
+
+    li {
+      width: 25%;
+      margin-right: 8px;
+      background-color: #ff8700;
+      border: 5px solid #fff;
+      font-weight: bold;
+      border-radius: 64px;
+      text-align: center;
+      overflow: hidden; // aタグがはみ出ないように
+      padding: 0; // paddingはaに移動
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      a {
+        display: flex; // Flexboxでテキストを中央揃え
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        padding: 16px 24px; // liのpaddingをこちらに移動
+        text-decoration: none; // 下線を消す
+        color: white; // テキストの色（必要に応じて変更）
+      }
+    }
+  }
+
+  &__link {
+    margin-top: 16px;
+    display: flex;
+
+    li {
+      width: 50%;
+      font-weight: bold;
+      font-size: 1.25rem;
+      border-radius: 64px;
+      text-align: center;
+      border: 5px solid #fff;
+
+      &:first-child {
+        background-color: #ff3656;
+        margin-right: 8px;
+      }
+
+      &:last-child {
+        background-color: #2dabe6;
+        margin-left: 8px;
+      }
+
+      a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        width: 100%;
+        height: 100%;
+        padding: 16px 24px;
+      }
+
+      span {
+        font-size: 0.625rem;
+      }
+    }
+  }
+
+  &__notes {
+    margin-top: 32px;
+    font-size: 0.525rem;
+  }
+
+  @include mixin.sp {
+    .inner {
+      padding: 0 6.25%;
+      max-width: 960px;
+    }
+
+    &__title {
+      @include mixin.heading;
+      text-align: center;
+      letter-spacing: 0.06em;
+      font-size: 2rem;
+    }
+
+    &__btn {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      li {
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+        background-color: #ff8700;
+        border: 5px solid #fff;
+        font-weight: bold;
+        border-radius: 64px;
+        text-align: center;
+        overflow: hidden; // aタグがはみ出ないように
+        padding: 0; // paddingはaに移動
+
+        &:last-child {
+          margin: 0 auto;
+        }
+
+        a {
+          display: flex; // Flexboxでテキストを中央揃え
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+          padding: 16px 24px; // liのpaddingをこちらに移動
+          text-decoration: none; // 下線を消す
+          color: white; // テキストの色（必要に応じて変更）
+        }
+      }
+    }
+
+    &__link {
+
+      flex-direction: column;
+      gap: 16px;
+
+      li {
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+
+
+        &:first-child {
+
+          margin: 0 auto;
+        }
+
+        &:last-child {
+          margin: 0 auto;
+        }
+
+        a {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 16px;
+          width: 100%;
+          height: 100%;
+
+        }
+
+        span {
+          font-size: 0.625rem;
+        }
+      }
+    }
+
+    &__notes {
+      margin-top: 32px;
+      font-size: 0.525rem;
+    }
+  }
+}

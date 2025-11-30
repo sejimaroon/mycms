@@ -1,0 +1,142 @@
+@use 'variables' as v;
+@use 'mixin';
+
+.about {
+  position: relative;
+
+  &__title {
+    left: 64px;
+  }
+
+  &__container {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    padding: 64px;
+    z-index: 1;
+
+    &--image {
+      margin: -120px 0 0 auto;
+      width: 100%;
+      max-width: 360px;
+      aspect-ratio: 4 / 3;
+
+      img {
+        width: 100%;
+      }
+    }
+  }
+
+  &__text {
+    font-size: 15px;
+    line-height: 2.5;
+    font-weight: bold;
+    letter-spacing: 0.06em;
+
+    p {
+      margin-top: 16px;
+
+      &:first-child {
+        margin-top: 32px;
+      }
+    }
+  }
+
+  &__theme {
+    writing-mode: vertical-rl;
+
+    &--title {
+      margin-left: 24px;
+      font-size: 2rem;
+      height: fit-content;
+      padding: 16px 8px;
+      font-weight: bold;
+      background-color: #fff;
+    }
+
+    &--lead {
+      margin-top: 16px;
+      font-size: 1.75rem;
+      font-weight: bold;
+      line-height: 2.25;
+    }
+  }
+
+  &__wrapper {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+  }
+
+
+  &__images {
+    display: flex;
+    margin-top: 80px;
+    width: 200%;
+    height: 400px;
+    overflow: hidden;
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 100%;
+      width: 200%;
+      height: 100%;
+      background: inherit;
+    }
+
+    &--item {
+      height: 100%;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 24px;
+
+      img {
+        max-height: 100%;
+        width: auto;
+        border-radius: 12px;
+      }
+
+      &:nth-child(4n + 1) img {
+        height: 80%;
+        align-self: flex-end;
+      }
+
+
+
+      &:nth-child(4n + 3) img {
+        height: 90%;
+        align-self: flex-start;
+      }
+
+      &:nth-child(4n + 4) img {
+        height: 75%;
+        align-self: center;
+      }
+
+    }
+  }
+
+
+
+  @keyframes loopImages {
+    0% {
+      transform: translateX(0);
+    }
+
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+.swiper-wrapper {
+  display: flex;
+  align-items: center;
+  will-change: transform;
+  width: 200%;
+}
