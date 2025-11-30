@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: mycms-server
+    name: mycms
     env: node
     region: oregon
     rootDir: server
