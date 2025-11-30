@@ -1,11 +1,13 @@
 services:
   - type: web
-    name: mycms
-    env: node
+    name: mycms-server
+    runtime: node
     region: oregon
+    plan: free
     rootDir: server
-    buildCommand: npm install
+    buildCommand: npm ci
     startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
+    healthCheckPath: /api/sections
