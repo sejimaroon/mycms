@@ -1,129 +1,3 @@
-// import express from 'express';
-// import fs from 'fs';
-// import path from 'path';
-// import cors from 'cors';
-// import helmet from 'helmet';
-// import bodyParser from 'body-parser';
-
-// const app = express();
-
-// // JSONボディを受け取れるようにする
-// app.use(bodyParser.json());
-// app.use(cors());
-// app.use(helmet());
-
-// // ← ここで dataFile を定義
-// const dataFile = path.join(process.cwd(), 'data.json');
-
-
-// function readData() {
-//   const raw = fs.readFileSync(DATA_FILE, 'utf8');
-//   return JSON.parse(raw);
-// }
-
-function formatDefaultId(date = new Date()) {
-  return date.toISOString().split('T')[0];
-}
-
-function ensureUniqueId(baseId, posts) {
-  let id = baseId;
-  let n = 2;
-  const hasId = (x) => posts.some((p) => String(p.id) === String(x));
-  while (hasId(id)) {
-    id = `${baseId}-${n++}`;
-  }
-  return id;
-}
-
-
-// function writeData(data) {
-//   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-// }
-
-// // 全セクション取得
-// app.get('/api/sections', (req, res) => {
-//   try {
-//     const data = readData();
-//     res.json(data.sections);
-//   } catch (err) {
-//     res.status(500).json({ error: 'failed to read data' });
-//   }
-// });
-
-
-// // セクション追加
-// app.post('/api/sections', (req, res) => {
-//   try {
-//     const data = readData();
-//     const newSection = { id: data.nextId++, ...req.body };
-//     data.sections.push(newSection);
-//     writeData(data);
-//     res.json(newSection);
-//   } catch (err) {
-//     res.status(500).json({ error: 'failed to write data' });
-//   }
-// });
-
-
-// // セクション更新
-// app.put('/api/sections/:id', (req, res) => {
-//   try {
-//     const id = Number(req.params.id);
-//     const data = readData();
-//     const idx = data.sections.findIndex(s => s.id === id);
-//     if (idx === -1) return res.status(404).json({ error: 'not found' });
-//     data.sections[idx] = { id, ...req.body };
-//     writeData(data);
-//     res.json(data.sections[idx]);
-//   } catch (err) {
-//     res.status(500).json({ error: 'failed to update' });
-//   }
-// });
-
-
-// // セクション削除
-// app.delete('/api/sections/:id', (req, res) => {
-//   try {
-//     const id = Number(req.params.id);
-//     const data = readData();
-//     data.sections = data.sections.filter(s => s.id !== id);
-//     writeData(data);
-//     res.json({ success: true });
-//   } catch (err) {
-//     res.status(500).json({ error: 'failed to delete' });
-//   }
-// });
-
-// app.get('/api/posts', (req, res) => {
-//   try {
-//     const data = JSON.parse(fs.readFileSync(dataFile, 'utf-8'));
-//     res.json(data.posts);
-//   } catch (err) {
-//     console.error('GET /api/posts error:', err);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
-
-// app.post('/api/posts', (req, res) => {
-//   try {
-//     const data = JSON.parse(fs.readFileSync(dataFile, 'utf-8'));
-//     const newPost = {
-//       id: Date.now(),
-//       ...req.body,
-//       date: new Date().toISOString().split('T')[0]
-//     };
-//     data.posts.push(newPost);
-//     fs.writeFileSync(dataFile, JSON.stringify(data, null, 2));
-//     res.status(201).json(newPost);
-//   } catch (err) {
-//     console.error('POST /api/posts error:', err);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
-
-// const PORT = process.env.PORT || 4000;
-// app.listen(PORT, () => console.log(`Server listening on http://localhost:${PORT}`));
-
 import express from "express";
 import fs from "fs";
 import path from "path";
@@ -148,14 +22,59 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage, limits: { fieldSize: 15728640, fileSize: 15728640 } });
 
+// CORS設定
 app.use(cors());
+
+// Helmet設定（CSPを緩和）
 app.use(
   helmet({
-    crossOriginResourcePolicy: false, // これ重要！
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'", "data:", "https:"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+      },
+    },
+    crossOriginResourcePolicy: { policy: "cross-origin" },
   })
 );
+
 app.use(express.json());
 app.use("/uploads", express.static(uploadDir));
+
+// ルートパスの追加
+app.get("/", (req, res) => {
+  res.json({
+    message: "MyCMS API Server",
+    version: "1.0.0",
+    endpoints: {
+      sections: "/api/sections",
+      posts: "/api/posts"
+    },
+    status: "running"
+  });
+});
+
+// ヘルスチェックエンドポイント
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+function formatDefaultId(date = new Date()) {
+  return date.toISOString().split('T')[0];
+}
+
+function ensureUniqueId(baseId, posts) {
+  let id = baseId;
+  let n = 2;
+  const hasId = (x) => posts.some((p) => String(p.id) === String(x));
+  while (hasId(id)) {
+    id = `${baseId}-${n++}`;
+  }
+  return id;
+}
 
 function readData() {
   if (!fs.existsSync(dataFile)) return { sections: [], posts: [], nextSectionId: 1 };
@@ -165,6 +84,7 @@ function readData() {
     return { sections: [], posts: [], nextSectionId: 1 };
   }
 }
+
 function saveData(data) {
   fs.writeFileSync(dataFile, JSON.stringify(data, null, 2));
 }
@@ -219,19 +139,16 @@ function migratePostsIfNeeded(data) {
   out.posts = Array.isArray(out.posts) ? out.posts.map((p) => ({ ...p })) : [];
   let changed = false;
   for (const post of out.posts) {
-    // If blocks is a JSON string, parse it
     if (typeof post.blocks === "string") {
       const parsed = tryParseJson(post.blocks);
       if (Array.isArray(parsed)) {
         post.blocks = parsed;
-        // If content still looks like JSON, derive plain text
         if (typeof post.content === "string" && post.content.trim().startsWith("[")) {
           post.content = extractPlainTextFromBlocks(parsed);
         }
         changed = true;
       }
     }
-    // If blocks is missing but content has JSON array string, migrate
     if (!Array.isArray(post.blocks) && typeof post.content === "string" && post.content.trim().startsWith("[")) {
       const parsed = tryParseJson(post.content);
       if (Array.isArray(parsed)) {
@@ -337,7 +254,6 @@ app.post("/api/posts", upload.single("image"), (req, res) => {
   }
 });
 
-// 投稿削除
 app.delete("/api/posts/:id", (req, res) => {
   const data = readData();
   const postId = String(req.params.id);
@@ -347,7 +263,6 @@ app.delete("/api/posts/:id", (req, res) => {
     return res.status(404).json({ error: "投稿が見つかりません" });
   }
 
-  // 画像ファイルも削除
   const post = data.posts[postIndex];
   if (post.image) {
     const imagePath = path.join(__dirname, post.image);
@@ -361,7 +276,6 @@ app.delete("/api/posts/:id", (req, res) => {
   res.json({ success: true });
 });
 
-// 投稿更新
 app.put("/api/posts/:id", upload.single("image"), (req, res) => {
   const data = readData();
   const postId = String(req.params.id);
