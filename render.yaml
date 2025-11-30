@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: mycms-server
+    env: node
+    region: oregon
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production

@@ -136,7 +136,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
 
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 const dataFile = path.join(__dirname, "data.json");
 const uploadDir = path.join(__dirname, "uploads");
 
@@ -275,11 +275,11 @@ app.put("/api/sections/:id", (req, res) => {
   const data = readData();
   const sectionId = parseInt(req.params.id);
   const sectionIndex = data.sections.findIndex(s => s.id === sectionId);
-  
+
   if (sectionIndex === -1) {
     return res.status(404).json({ error: "セクションが見つかりません" });
   }
-  
+
   data.sections[sectionIndex] = { ...data.sections[sectionIndex], ...req.body };
   saveData(data);
   res.json(data.sections[sectionIndex]);
@@ -310,7 +310,7 @@ app.post("/api/posts", upload.single("image"), (req, res) => {
   try {
     console.log("POST /api/posts - body:", req.body);
     console.log("POST /api/posts - file:", req.file);
-    
+
     const data = readData();
     const { blocks, plain } = parseBlocksAndPlainTextFromBody(req.body);
     const providedIdRaw = req.body.id !== undefined ? String(req.body.id).trim() : "";
@@ -325,9 +325,9 @@ app.post("/api/posts", upload.single("image"), (req, res) => {
       date: new Date().toISOString().split('T')[0],
       sectionId: parseInt(req.body.sectionId) || 1
     };
-    
+
     console.log("New post:", newPost);
-    
+
     data.posts.push(newPost);
     saveData(data);
     res.json(newPost);
@@ -342,11 +342,11 @@ app.delete("/api/posts/:id", (req, res) => {
   const data = readData();
   const postId = String(req.params.id);
   const postIndex = data.posts.findIndex(p => String(p.id) === postId);
-  
+
   if (postIndex === -1) {
     return res.status(404).json({ error: "投稿が見つかりません" });
   }
-  
+
   // 画像ファイルも削除
   const post = data.posts[postIndex];
   if (post.image) {
@@ -355,7 +355,7 @@ app.delete("/api/posts/:id", (req, res) => {
       fs.unlinkSync(imagePath);
     }
   }
-  
+
   data.posts.splice(postIndex, 1);
   saveData(data);
   res.json({ success: true });
@@ -366,11 +366,11 @@ app.put("/api/posts/:id", upload.single("image"), (req, res) => {
   const data = readData();
   const postId = String(req.params.id);
   const postIndex = data.posts.findIndex(p => String(p.id) === postId);
-  
+
   if (postIndex === -1) {
     return res.status(404).json({ error: "投稿が見つかりません" });
   }
-  
+
   const existingPost = data.posts[postIndex];
   const { blocks, plain } = parseBlocksAndPlainTextFromBody(req.body);
   data.posts[postIndex] = {
@@ -381,7 +381,7 @@ app.put("/api/posts/:id", upload.single("image"), (req, res) => {
     sectionId: req.body.sectionId ? parseInt(req.body.sectionId) : existingPost.sectionId,
     image: req.file ? `/uploads/${req.file.filename}` : existingPost.image
   };
-  
+
   saveData(data);
   res.json(data.posts[postIndex]);
 });

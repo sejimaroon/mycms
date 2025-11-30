@@ -1,0 +1,12 @@
+{
+  "name": "mycms2025",
+  "version": "1.0.0",
+  "description": "MyCMS Project",
+  "scripts": {
+    "start": "cd server && npm start",
+    "install-server": "cd server && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
