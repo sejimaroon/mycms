@@ -16,6 +16,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import "../../frontend/style.css";
+import API_CONFIG from "./config";
 
 // ブロックタイプの定義
 const blockTypes = [
@@ -420,7 +421,7 @@ export default function App() {
 
   const fetchSections = async () => {
     try {
-      const res = await fetch("http://localhost:4000/api/sections");
+      const res = await fetch(`${API_CONFIG.getBaseURL()}/api/sections`);
       const data = await res.json();
       setSections(data);
     } catch (err) {
@@ -431,8 +432,8 @@ export default function App() {
   const fetchPosts = async (sectionId = null) => {
     try {
       const url = sectionId
-        ? `http://localhost:4000/api/posts?sectionId=${sectionId}`
-        : "http://localhost:4000/api/posts";
+        ? `${API_CONFIG.getBaseURL()}/api/posts?sectionId=${sectionId}`
+        : `${API_CONFIG.getBaseURL()}/api/posts`;
       const res = await fetch(url);
       const data = await res.json();
       setPosts(data);
@@ -444,7 +445,7 @@ export default function App() {
   const addSection = async () => {
     if (!newSection.name) return;
     try {
-      await fetch("http://localhost:4000/api/sections", {
+      await fetch(`${API_CONFIG.getBaseURL()}/api/sections`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newSection),
@@ -458,7 +459,7 @@ export default function App() {
 
   const updateSection = async (section) => {
     try {
-      await fetch(`http://localhost:4000/api/sections/${section.id}`, {
+      await fetch(`${API_CONFIG.getBaseURL()}/api/sections/${section.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(section),
@@ -473,7 +474,7 @@ export default function App() {
   const deleteSection = async (sectionId) => {
     if (!confirm("このセクションと関連する投稿を削除してもよろしいですか？")) return;
     try {
-      await fetch(`http://localhost:4000/api/sections/${sectionId}`, { method: "DELETE" });
+      await fetch(`${API_CONFIG.getBaseURL()}/api/sections/${sectionId}`, { method: "DELETE" });
       fetchSections();
       fetchPosts();
     } catch (err) {
@@ -508,7 +509,7 @@ export default function App() {
       formData.append("sectionId", selectedSectionId.toString());
       if (image) formData.append("image", image);
 
-      const res = await fetch(`http://localhost:4000/api/posts/${encodeURIComponent(editingPost.id)}`, {
+      const res = await fetch(`${API_CONFIG.getBaseURL()}/api/posts/${encodeURIComponent(editingPost.id)}`, {
         method: "PUT",
         body: formData,
       });
@@ -562,7 +563,7 @@ export default function App() {
       formData.append("id", postIdInput || "");
       if (image) formData.append("image", image);
 
-      const res = await fetch("http://localhost:4000/api/posts", {
+      const res = await fetch(`${API_CONFIG.getBaseURL()}/api/posts`, {
         method: "POST",
         body: formData,
       });
@@ -605,7 +606,7 @@ export default function App() {
 
   const removePost = async (postId) => {
     try {
-      await fetch(`http://localhost:4000/api/posts/${encodeURIComponent(postId)}`, { method: "DELETE" });
+      await fetch(`${API_CONFIG.getBaseURL()}/api/posts/${encodeURIComponent(postId)}`, { method: "DELETE" });
       setPosts(posts.filter((p) => String(p.id) !== String(postId)));
     } catch (err) {
       console.error("投稿削除エラー:", err);
@@ -833,7 +834,7 @@ export default function App() {
                   </div>
                   {p.image && (
                     <img
-                      src={`http://localhost:4000${p.image}`}
+                      src={API_CONFIG.getImageURL(p.image)}
                       width="150"
                       alt={p.title}
                     />

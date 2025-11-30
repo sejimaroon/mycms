@@ -19,15 +19,20 @@
   <div class="mv"></div>
   <main class="main">
     <div id="dynamic-sections">読み込み中...</div>
+    
+    <!-- 設定ファイルを読み込み -->
+    <script src="../config.js"></script>
+    
     <script>
-      // 旧コード（コメントアウト）
-      /*
+      // API設定を取得（環境自動判定）
+      const API_BASE_URL = window.API_CONFIG.getBaseURL();
+      console.log(`Using API: ${API_BASE_URL}`);
+
       async function renderSections() {
         try {
-          // セクションと投稿を取得
           const [sectionsRes, postsRes] = await Promise.all([
-            fetch("http://localhost:4000/api/sections"),
-            fetch("http://localhost:4000/api/posts")
+            fetch(`${API_BASE_URL}/api/sections`),
+            fetch(`${API_BASE_URL}/api/posts`)
           ]);
 
           allSections = await sectionsRes.json();
@@ -35,42 +40,10 @@
 
           const container = document.getElementById("dynamic-sections");
 
-          // セクションごとに投稿をグループ化
-          const sectionsWithPosts = allSections.map(section => {
-            const sectionPosts = allPosts.filter(post => post.sectionId === section.id);
-            return { ...section, posts: sectionPosts };
-          });
-
-          // セクションを描画
-          container.innerHTML = sectionsWithPosts.map(section => renderSection(section)).join("");
-
-        } catch (err) {
-          document.getElementById("dynamic-sections").innerText = "投稿の読み込みに失敗しました";
-          console.error(err);
-        }
-      }
-      */
-
-      // 新コード（新しい投稿ほど上に並ぶように修正）
-      async function renderSections() {
-        try {
-          // セクションと投稿を取得
-          const [sectionsRes, postsRes] = await Promise.all([
-            fetch("http://localhost:4000/api/sections"),
-            fetch("http://localhost:4000/api/posts")
-          ]);
-
-          allSections = await sectionsRes.json();
-          allPosts = await postsRes.json();
-
-          const container = document.getElementById("dynamic-sections");
-
-          // セクションごとに投稿をグループ化して、新しい順に並び替え
           const sectionsWithPosts = allSections.map(section => {
             const sectionPosts = allPosts
               .filter(post => post.sectionId === section.id)
               .sort((a, b) => {
-                // dateフィールドで降順ソート（新しいものが先）
                 const dateA = new Date(a.date || 0);
                 const dateB = new Date(b.date || 0);
                 return dateB - dateA;
@@ -78,7 +51,6 @@
             return { ...section, posts: sectionPosts };
           });
 
-          // セクションを描画
           container.innerHTML = sectionsWithPosts.map(section => renderSection(section)).join("");
 
         } catch (err) {
@@ -91,29 +63,6 @@
         const displayPosts = section.posts.slice(0, 6);
         const hasMore = section.posts.length > 6;
 
-        // 旧コード（コメントアウト）
-        /*
-        return `
-          <section class="section" style=border-color: ${section.style.borderColor};">
-            <h2 class="section__title" style="color: ${section.style.titleColor};">${escapeHtml(section.name)}</h2>
-            <div class="post__container">
-              ${displayPosts.length > 0
-            ? displayPosts.map(post => renderPostPreview(post, section.style)).join("")
-            : `<p style="color: ${section.style.contentColor};">このセクションにはまだ投稿がありません</p>`
-          }
-            </div>
-            ${hasMore ? `
-              <div class="section-footer">
-                <button class="view-all-btn" onclick="navigateTo('#/section/${section.id}')" style="background-color: ${section.style.titleColor};">
-                  一覧を見る (${section.posts.length}件)
-                </button>
-              </div>
-            ` : ""}
-          </section>
-        `;
-        */
-
-        // 新コード（クラス設定追加）
         return `
           <section class="section section--id-${section.id}" data-section-id="${section.id}" style="border-color: ${section.style.borderColor};">
             <h2 class="section__title section__title--id-${section.id}" style="color: ${section.style.titleColor};">${escapeHtml(section.name)}</h2>
@@ -135,7 +84,6 @@
       }
 
       function resolveSectionMvUrl(section) {
-        // 優先順: section.style.mvImage -> section.mvImage -> 既定命名 (mv-<id>.jpg)
         let p = null;
         if (section && section.style && typeof section.style.mvImage === 'string' && section.style.mvImage.trim()) {
           p = section.style.mvImage.trim();
@@ -146,7 +94,6 @@
         }
 
         if (!p) return null;
-        // 絶対・相対の簡易判定。相対指定(ファイル名のみ)なら ../images/ を付与
         const isAbsolute = /^(https?:)?\/\//.test(p) || p.startsWith('data:') || p.startsWith('blob:') || p.startsWith('/') || p.startsWith('../') || p.startsWith('./');
         return isAbsolute ? p : `../images/${p}`;
       }
@@ -155,7 +102,6 @@
         const mv = document.querySelector('.mv');
         if (!mv) return;
 
-        // ホームなどセクション未指定時はCSS既定を使う
         if (!section) {
           mv.style.backgroundImage = '';
           return;
@@ -167,23 +113,19 @@
           return;
         }
 
-        // 画像の存在確認用にプリロードしてから適用
         const img = new Image();
         img.onload = () => {
           mv.style.backgroundImage = `url('${url}')`;
         };
         img.onerror = () => {
-          // 見つからない場合はデフォルトにフォールバック
           mv.style.backgroundImage = '';
         };
         img.src = url;
       }
 
+      // API_CONFIGを使用して画像URLを処理
       function prefixImageUrl(url) {
-        if (!url) return "";
-        if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:") || url.startsWith("blob:") || url.startsWith("//")) return url;
-        if (url.startsWith("/uploads/")) return `http://localhost:4000${url}`;
-        return url;
+        return window.API_CONFIG.getImageURL(url);
       }
 
       function extractTextFromBlocks(blocks) {
@@ -220,44 +162,6 @@
         return found;
       }
 
-      // 旧コード（コメントアウト）
-      /*
-      function renderBlocks(blocks) {
-        const renderBlock = (b) => {
-          if (!b) return '';
-          if (b.type === 'heading') {
-            const level = Math.min(6, Math.max(1, Number(b.level) || 2));
-            return `<h${level}>${escapeHtml(b.content || '')}</h${level}>`;
-          }
-          if (b.type === 'paragraph') {
-            return `<p>${escapeHtml(b.content || '')}</p>`;
-          }
-          if (b.type === 'image') {
-            const src = prefixImageUrl(b.url);
-            const alt = escapeHtml(b.alt || '');
-            return src ? `<div class="post__image"><img src="${src}" alt="${alt}" style="max-width:100%;"></div>` : '';
-          }
-          if (b.type === 'columns') {
-            const cols = Array.isArray(b.children) ? b.children : [];
-            return `<div class="block-columns" style="display:flex; gap:12px;">
-              ${cols.map(col => `<div style="flex:1;">${renderBlocks(col || [])}</div>`).join('')}
-            </div>`;
-          }
-          if (b.type === 'grid') {
-            const children = Array.isArray(b.children) ? b.children : [];
-            const cols = Number(b.cols) || 3;
-            const gap = Number(b.gap) || 16;
-            return `<div class="block-grid" style="display:grid; grid-template-columns: repeat(${cols}, 1fr); gap:${gap}px;">
-              ${children.map(child => `<div>${renderBlocks([child])}</div>`).join('')}
-            </div>`;
-          }
-          return '';
-        };
-        return (Array.isArray(blocks) ? blocks : []).map(renderBlock).join('');
-      }
-      */
-
-      // 新コード（クラス設定追加）
       function renderBlocks(blocks, sectionId = null) {
         const renderBlock = (b, index) => {
           if (!b) return '';
@@ -296,8 +200,6 @@
         return (Array.isArray(blocks) ? blocks : []).map(renderBlock).join('');
       }
 
-
-      // ▼ 追加：excerpt をブロックごとに出力する関数
       function renderExcerptBlocks(blocks, sectionId = null) {
         if (!blocks) return '';
         const output = [];
@@ -338,36 +240,7 @@
         const textSource = Array.isArray(post.blocks) ? extractTextFromBlocks(post.blocks) : (post.content || '');
         const excerpt = textSource.substring(0, 100) + (textSource.length > 100 ? '...' : '');
         const idEnc = encodeURIComponent(String(post.id));
-        //       let previewUrl = null;
-        //       if (post.image) {
-        //         previewUrl = `http://localhost:4000${post.image}`;
-        //       } else if (Array.isArray(post.blocks)) {
-        //         const u = getFirstBlockImage(post.blocks);
-        //         if (u) previewUrl = prefixImageUrl(u);
-        //       }
 
-        //       const imageHtml = previewUrl ? `
-        //   <div class="post__image post__image--section-${post.sectionId}">
-        //     <img src="${previewUrl}" alt="${escapeHtml(post.title || '')}" style="max-width:100%;">
-        //   </div>
-        // ` : '';
-
-        // 修正前のコード（コメントアウト）
-        /*
-        return `
-          <article class="post__preview post__preview--section-${post.sectionId}" data-post-id="${post.id}" data-section-id="${post.sectionId}">
-            <h3 class="post__title post__title--section-${post.sectionId}">
-              <a href="#/post/${idEnc}" onclick="navigateTo('#/post/${idEnc}'); return false;" class="post__title-link post__title-link--section-${post.sectionId}" style="color: ${sectionStyle.titleColor};">${escapeHtml(post.title || 'タイトル未設定')}</a>
-            </h3>
-            <p class="post__date post__date--section-${post.sectionId}" style="color: ${sectionStyle.contentColor};">${escapeHtml(post.date || '')}</p>
-            ${imageHtml}
-            <p class="post__excerpt post__excerpt--section-${post.sectionId}" style="color: ${sectionStyle.contentColor};">${escapeHtml(excerpt)}</p>
-            <a href="#/post/${idEnc}" onclick="navigateTo('#/post/${idEnc}'); return false;" class="post__read-more-link post__read-more-link--section-${post.sectionId}" style="color: ${sectionStyle.titleColor};">続きを読む →</a>
-          </article>
-        `;
-        */
-
-        // 修正後のコード（ブロックごとにクラスを分けて出力）
         const excerptHtml = Array.isArray(post.blocks)
           ? renderExcerptBlocks(post.blocks, post.sectionId)
           : `<p class="excerpt excerpt--paragraph excerpt--section-${post.sectionId}">${escapeHtml(post.content || '')}</p>`;
@@ -386,32 +259,12 @@
   `;
       }
 
-
-
       function renderPost(post, sectionStyle) {
         const contentHtml = Array.isArray(post.blocks) ? renderBlocks(post.blocks, post.sectionId) : escapeHtml(post.content || "");
 
-        // 旧コード（コメントアウト）
-        /*
-        const imageHtml = post.image ? `
-          <div class="post__image">
-            <img src="http://localhost:4000${post.image}" alt="${escapeHtml(post.title)}" style="max-width:100%;">
-          </div>
-        ` : "";
-        return `
-          <article class="post">
-            <h3 class="post__title" style="color: ${sectionStyle.titleColor};">${escapeHtml(post.title || "タイトル未設定")}</h3>
-            ${imageHtml}
-            <div class="post__content" style="color: ${sectionStyle.contentColor};">${contentHtml}</div>
-            <p class="post__date" style="color: ${sectionStyle.contentColor};">${escapeHtml(post.date || "")}</p>
-          </article>
-        `;
-        */
-
-        // 新コード（クラス設定追加）
         const imageHtml = post.image ? `
           <div class="post__image post__image--section-${post.sectionId}">
-            <img src="http://localhost:4000${post.image}" alt="${escapeHtml(post.title)}" style="max-width:100%;">
+            <img src="${prefixImageUrl(post.image)}" alt="${escapeHtml(post.title)}" style="max-width:100%;">
           </div>
         ` : "";
         return `
@@ -424,12 +277,10 @@
         `;
       }
 
-      // グローバル変数
       let currentView = 'home';
       let allSections = [];
       let allPosts = [];
 
-      // ルーティング機能
       function handleRouting() {
         const hash = window.location.hash;
         if (hash.startsWith('#/post/')) {
@@ -444,12 +295,10 @@
         }
       }
 
-      // 履歴管理付きナビゲーション
       function navigateTo(hash) {
         window.location.hash = hash;
       }
 
-      // 戻るボタン機能
       function goBack() {
         if (window.history.length > 1) {
           window.history.back();
@@ -458,7 +307,6 @@
         }
       }
 
-      // 投稿詳細表示
       async function showPostDetail(postId) {
         try {
           const post = allPosts.find(p => String(p.id) === String(postId));
@@ -472,36 +320,6 @@
           updateMVForSection(section);
           const container = document.getElementById('dynamic-sections');
 
-          // 旧コード（コメントアウト）
-          /*
-          container.innerHTML = `
-            <div class="post__detail--container">
-              <nav class="breadcrumb">
-                <a href="#" onclick="navigateTo(''); return false;">ホーム</a> /
-                <a href="#/section/${section.id}" onclick="navigateTo('#/section/${section.id}'); return false;">${escapeHtml(section.name)}</a> /
-                <span>${escapeHtml(post.title)}</span>
-              </nav>
-              <div class="back-button-container">
-
-              </div>
-              <article class="post__detail" border-color: ${section.style.borderColor};">
-                <h1 style="color: ${section.style.titleColor};">${escapeHtml(post.title || 'タイトル未設定')}</h1>
-                <p class="post__date" style="color: ${section.style.contentColor};">${escapeHtml(post.date || '')}</p>
-                ${post.image ? `
-                  <div class="post__image">
-                    <img src="http://localhost:4000${post.image}" alt="${escapeHtml(post.title)}" style="max-width:100%;">
-                  </div>
-                ` : ''}
-                <div class="post__content" style="color: ${section.style.contentColor};">${Array.isArray(post.blocks) ? renderBlocks(post.blocks) : escapeHtml(post.content || '')}</div>
-              </article>
-              <button class="post__back--button" onclick="goBack()">
-                ← 戻る
-              </button>
-            </div>
-          `;
-          */
-
-          // 新コード（クラス設定追加）
           container.innerHTML = `
             <div class="post__detail-container post__detail-container--section-${section.id}">
               <nav class="breadcrumb breadcrumb--section-${section.id}">
@@ -517,7 +335,7 @@
                 <p class="post__detail-date post__detail-date--section-${section.id}" style="color: ${section.style.contentColor};">${escapeHtml(post.date || '')}</p>
                 ${post.image ? `
                   <div class="post__detail-image post__detail-image--section-${section.id}">
-                    <img src="http://localhost:4000${post.image}" alt="${escapeHtml(post.title)}" style="max-width:100%;">
+                    <img src="${prefixImageUrl(post.image)}" alt="${escapeHtml(post.title)}" style="max-width:100%;">
                   </div>
                 ` : ''}
                 <div class="post__detail-content post__detail-content--section-${section.id}" style="color: ${section.style.contentColor};">${Array.isArray(post.blocks) ? renderBlocks(post.blocks, section.id) : escapeHtml(post.content || '')}</div>
@@ -532,18 +350,12 @@
         }
       }
 
-      // セクション一覧表示
       async function viewAllPosts(sectionId, sectionName) {
         try {
           const section = allSections.find(s => s.id === sectionId);
-          // 旧コード（コメントアウト）
-          // const sectionPosts = allPosts.filter(post => post.sectionId === sectionId);
-
-          // 新コード（新しい投稿ほど上に並ぶように修正）
           const sectionPosts = allPosts
             .filter(post => post.sectionId === sectionId)
             .sort((a, b) => {
-              // dateフィールドで降順ソート（新しいものが先）
               const dateA = new Date(a.date || 0);
               const dateB = new Date(b.date || 0);
               return dateB - dateA;
@@ -552,34 +364,6 @@
           updateMVForSection(section);
           const container = document.getElementById('dynamic-sections');
 
-          // 旧コード（コメントアウト）
-          /*
-          container.innerHTML = `
-            <div class="section-list-container">
-              <nav class="breadcrumb">
-                <a href="#" onclick="navigateTo(''); return false;">ホーム</a> /
-                <span>${escapeHtml(section.name)}</span>
-              </nav>
-              <div class="back-button-container">
-                <button class="back-button" onclick="goBack()">
-                  ← 戻る
-                </button>
-              </div>
-              <section class="section" style=border-color: ${section.style.borderColor};">
-                <h1 style="color: ${section.style.titleColor};">${escapeHtml(section.name)} 一覧</h1>
-                ${section.description ? `<p style="color: ${section.style.contentColor};">${escapeHtml(section.description)}</p>` : ''}
-                <div class="post__list">
-                  ${sectionPosts.length > 0
-              ? sectionPosts.map(post => renderPostPreview(post, section.style)).join('')
-              : `<p style="color: ${section.style.contentColor};">このセクションにはまだ投稿がありません</p>`
-            }
-                </div>
-              </section>
-            </div>
-          `;
-          */
-
-          // 新コード（クラス設定追加）
           container.innerHTML = `
             <div class="section-list-container section-list-container--id-${section.id}">
               <nav class="breadcrumb breadcrumb--section-${section.id}">
@@ -617,7 +401,6 @@
           .replace(/'/g, '&#39;');
       }
 
-      // ルーティングを有効化
       window.addEventListener('hashchange', handleRouting);
       window.addEventListener('load', () => {
         handleRouting();
