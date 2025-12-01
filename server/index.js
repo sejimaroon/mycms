@@ -46,11 +46,13 @@ app.use("/uploads", express.static(uploadDir));
 
 // 静的ファイルの配信（フロントエンド）
 const frontendPath = path.join(__dirname, "..", "frontend");
+const adminPath = path.join(__dirname, "..", "admin", "dist");
 const cssPath = path.join(__dirname, "..", "css");
 const imagesPath = path.join(__dirname, "..", "images");
 
 app.use("/css", express.static(cssPath));
 app.use("/images", express.static(imagesPath));
+app.use("/admin", express.static(adminPath));
 app.use(express.static(frontendPath));
 
 // ルートパス - フロントエンドのindex.htmlを配信
@@ -72,22 +74,29 @@ app.get("/", (req, res) => {
   }
 });
 
-// 管理画面用のルート（将来的に追加予定）
+// 管理画面用のルート
 app.get("/admin", (req, res) => {
-  res.send(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>Admin - MyCMS</title>
-    </head>
-    <body>
-      <h1>管理画面</h1>
-      <p>Admin画面は別途Reactアプリとしてビルドしてデプロイしてください。</p>
-      <p><a href="/">フロントエンドに戻る</a></p>
-    </body>
-    </html>
-  `);
+  const adminIndexPath = path.join(adminPath, "index.html");
+  if (fs.existsSync(adminIndexPath)) {
+    res.sendFile(adminIndexPath);
+  } else {
+    res.status(404).send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Admin - MyCMS</title>
+      </head>
+      <body>
+        <h1>管理画面</h1>
+        <p>Admin画面がビルドされていません。</p>
+        <p>以下のコマンドでビルドしてください：</p>
+        <pre>cd admin && npm run build</pre>
+        <p><a href="/">フロントエンドに戻る</a></p>
+      </body>
+      </html>
+    `);
+  }
 });
 
 // ヘルスチェックエンドポイント
