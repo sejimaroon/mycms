@@ -4,10 +4,9 @@ services:
     runtime: node
     region: oregon
     plan: free
-    rootDir: server
-    buildCommand: npm ci
+    buildCommand: npm install
     startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
-    healthCheckPath: /api/sections
+    healthCheckPath: /health

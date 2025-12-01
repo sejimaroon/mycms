@@ -44,17 +44,50 @@ app.use(
 app.use(express.json());
 app.use("/uploads", express.static(uploadDir));
 
-// ルートパスの追加
+// 静的ファイルの配信（フロントエンド）
+const frontendPath = path.join(__dirname, "..", "frontend");
+const cssPath = path.join(__dirname, "..", "css");
+const imagesPath = path.join(__dirname, "..", "images");
+
+app.use("/css", express.static(cssPath));
+app.use("/images", express.static(imagesPath));
+app.use(express.static(frontendPath));
+
+// ルートパス - フロントエンドのindex.htmlを配信
 app.get("/", (req, res) => {
-  res.json({
-    message: "MyCMS API Server",
-    version: "1.0.0",
-    endpoints: {
-      sections: "/api/sections",
-      posts: "/api/posts"
-    },
-    status: "running"
-  });
+  const indexPath = path.join(frontendPath, "index.html");
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.json({
+      message: "MyCMS API Server",
+      version: "1.0.0",
+      endpoints: {
+        sections: "/api/sections",
+        posts: "/api/posts",
+        admin: "/admin (coming soon)"
+      },
+      status: "running"
+    });
+  }
+});
+
+// 管理画面用のルート（将来的に追加予定）
+app.get("/admin", (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Admin - MyCMS</title>
+    </head>
+    <body>
+      <h1>管理画面</h1>
+      <p>Admin画面は別途Reactアプリとしてビルドしてデプロイしてください。</p>
+      <p><a href="/">フロントエンドに戻る</a></p>
+    </body>
+    </html>
+  `);
 });
 
 // ヘルスチェックエンドポイント
